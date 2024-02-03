@@ -4,4 +4,6 @@ use (
 	./array
 	./countingsort
 	./linkedlist
+	./queue
+	./stack
 )
