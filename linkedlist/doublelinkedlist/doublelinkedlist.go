@@ -203,3 +203,20 @@ func (l *LinkedList[T]) PopBack() *Node[T] {
 
 	return n
 }
+
+func (l *LinkedList[T]) Reverse() {
+	if l.root == nil {
+		return
+	}
+
+	node := l.root
+	var next *Node[T]
+
+	for node != nil {
+		next = node.next
+		node.prev, node.next = node.next, node.prev
+		node = next
+	}
+
+	l.root, l.tail = l.tail, l.root
+}
