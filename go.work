@@ -6,5 +6,6 @@ use (
 	./countingsort
 	./linkedlist
 	./queue
+	./ssort
 	./stack
 )
