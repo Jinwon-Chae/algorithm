@@ -1,8 +1,11 @@
-module queue
+module algorithm
 
-go 1.21.6
+go 1.21.5
 
-require github.com/stretchr/testify v1.8.4
+require (
+	github.com/stretchr/testify v1.8.4
+	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

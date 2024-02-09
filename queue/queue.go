@@ -1,6 +1,6 @@
 package queue
 
-import "linkedlist/doublelinkedlist"
+import "algorithm/linkedlist/doublelinkedlist"
 
 type Queue[T any] struct {
 	l *doublelinkedlist.LinkedList[T]

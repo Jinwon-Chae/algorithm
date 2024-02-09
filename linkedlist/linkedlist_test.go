@@ -1,8 +1,8 @@
 package linkedlist
 
 import (
-	"linkedlist/doublelinkedlist"
-	"linkedlist/singlelinkedlist"
+	"algorithm/linkedlist/doublelinkedlist"
+	"algorithm/linkedlist/singlelinkedlist"
 	"testing"
 )
 
