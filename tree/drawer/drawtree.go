@@ -1,6 +1,7 @@
-package tree
+package drawer
 
 import (
+	"algorithm/tree/nodeinterface"
 	"fmt"
 	"image/color"
 
@@ -10,29 +11,30 @@ import (
 	"gonum.org/v1/plot/vg/draw"
 )
 
-type drawTreeNode[T any] struct {
-	Value T
+type drawTreeNode struct {
+	Value any
 
 	X int
 	Y int
 
-	Child []*drawTreeNode[T]
+	Child []*drawTreeNode
 }
 
-func makeDrawTree[T any](node *TreeNode[T], level int, order *int) *drawTreeNode[T] {
+func makeDrawTree(node nodeinterface.Node, level int, order *int) *drawTreeNode {
 	if node == nil {
 		return nil
 	}
 
-	drawNode := &drawTreeNode[T]{
-		Value: node.Value,
+	drawNode := &drawTreeNode{
+		Value: node.GetValue(),
 		Y:     level,
 	}
 
 	// in-order
-	half := len(node.Childs) / 2
+	childs := node.GetChilds()
+	half := len(childs) / 2
 	for i := 0; i < half; i++ {
-		child := node.Childs[i]
+		child := childs[i]
 		drawNode.Child = append(drawNode.Child, makeDrawTree(child, level-1, order))
 	}
 
@@ -41,15 +43,15 @@ func makeDrawTree[T any](node *TreeNode[T], level int, order *int) *drawTreeNode
 	(*order)++
 
 	// right-side
-	for i := half; i < len(node.Childs); i++ {
-		child := node.Childs[i]
+	for i := half; i < len(childs); i++ {
+		child := childs[i]
 		drawNode.Child = append(drawNode.Child, makeDrawTree(child, level-1, order))
 	}
 
 	return drawNode
 }
 
-func SaveTreeGraph[T any](t *TreeNode[T], filepath string) error {
+func SaveTreeGraph(t nodeinterface.Node, filepath string) error {
 	var order int
 	drawTree := makeDrawTree(t, 0, &order)
 	if drawTree == nil {
@@ -87,19 +89,27 @@ func SaveTreeGraph[T any](t *TreeNode[T], filepath string) error {
 	return p.Save(1000, 600, filepath)
 }
 
-func (d *drawTreeNode[T]) getLocations(xys *plotter.XYs) {
+func (d *drawTreeNode) getLocations(xys *plotter.XYs) {
 	*xys = append(*xys, plotter.XY{
 		X: float64(d.X),
 		Y: float64(d.Y),
 	})
 
 	for _, c := range d.Child {
+		if c == nil {
+			continue
+		}
+
 		c.getLocations(xys)
 	}
 }
 
-func drawLines[T any](node *drawTreeNode[T], p *plot.Plot) error {
+func drawLines(node *drawTreeNode, p *plot.Plot) error {
 	for _, c := range node.Child {
+		if c == nil {
+			continue
+		}
+
 		pts := plotter.XYs{
 			{X: float64(node.X), Y: float64(node.Y)},
 			{X: float64(c.X), Y: float64(c.Y)},
@@ -126,7 +136,7 @@ func drawLines[T any](node *drawTreeNode[T], p *plot.Plot) error {
 	return nil
 }
 
-func addLabels[T any](node *drawTreeNode[T], p *plot.Plot) error {
+func addLabels(node *drawTreeNode, p *plot.Plot) error {
 	label, err := plotter.NewLabels(plotter.XYLabels{
 		XYs: []plotter.XY{
 			{X: float64(node.X), Y: float64(node.Y)},
@@ -139,6 +149,10 @@ func addLabels[T any](node *drawTreeNode[T], p *plot.Plot) error {
 
 	p.Add(label)
 	for _, c := range node.Child {
+		if c == nil {
+			continue
+		}
+
 		err = addLabels(c, p)
 		if err != nil {
 			return err

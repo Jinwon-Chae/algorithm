@@ -2,6 +2,7 @@ package main
 
 import (
 	"algorithm/tree"
+	"algorithm/tree/drawer"
 	"log"
 
 	_ "image/png"
@@ -52,7 +53,7 @@ func main() {
 	n33.Add("Node3-3-1")
 	n33.Add("Node3-3-2")
 
-	err := tree.SaveTreeGraph[string](root, "./tree.png")
+	err := drawer.SaveTreeGraph(root, "./tree.png")
 	if err != nil {
 		log.Fatal(err)
 	}

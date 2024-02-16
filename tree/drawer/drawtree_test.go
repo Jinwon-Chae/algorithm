@@ -1,13 +1,14 @@
-package tree
+package drawer
 
 import (
+	"algorithm/tree"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDrawTest(t *testing.T) {
-	root := &TreeNode[string]{
+	root := &tree.TreeNode[string]{
 		Value: "A",
 	}
 
@@ -20,7 +21,7 @@ func TestDrawTest(t *testing.T) {
 
 	d.Add("G")
 
-	err := SaveTreeGraph[string](root, "./tree.png")
+	err := SaveTreeGraph(root, "./tree.png")
 	assert.Nil(t, err)
 
 }
